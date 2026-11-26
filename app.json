@@ -1,23 +1,28 @@
 {
   "expo": {
-    "name": "dark-team-fantasy",
+    "name": "Dark Team",
     "slug": "dark-team-fantasy",
     "version": "1.0.0",
     "orientation": "portrait",
-    "icon": "./assets/images/icon.png",
+    "icon": "./assets/images/team-logo.png",
     "scheme": "darkteamfantasy",
-    "userInterfaceStyle": "automatic",
+    "userInterfaceStyle": "dark",
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "bundleIdentifier": "com.darkteam.fantasy",
+      "infoPlist": {
+        "CFBundleDisplayName": "Dark Team",
+        "NSAppTransportSecurity": {
+          "NSAllowsArbitraryLoads": true
+        }
+      }
     },
     "android": {
       "adaptiveIcon": {
-        "backgroundColor": "#E6F4FE",
-        "foregroundImage": "./assets/images/android-icon-foreground.png",
-        "backgroundImage": "./assets/images/android-icon-background.png",
-        "monochromeImage": "./assets/images/android-icon-monochrome.png"
+        "backgroundColor": "#07090D",
+        "foregroundImage": "./assets/images/team-logo.png"
       },
-      "predictiveBackGestureEnabled": false
+      "package": "com.darkteam.fantasy"
     },
     "web": {
       "bundler": "metro",
@@ -25,18 +30,24 @@
       "favicon": "./assets/images/favicon.png"
     },
     "plugins": [
+      "expo-font",
       "expo-router",
+      "./plugins/silence-pod-warnings",
       [
         "expo-splash-screen",
         {
-          "image": "./assets/images/splash-icon.png",
-          "resizeMode": "contain",
-          "backgroundColor": "#ffffff"
+          "image": "./assets/images/team-logo.png",
+          "resizeMode": "cover",
+          "backgroundColor": "#07090D"
         }
       ]
     ],
     "experiments": {
       "typedRoutes": true
+    },
+    "extra": {
+      "apiUrl": "https://script.google.com/macros/s/AKfycbxEDkCTI7tjOiZDR_hgfPgS_r1nmqwMKyutGt5lVD_asuDIACTJH1D-8BknRAOaWSzKUA/exec",
+      "leagueKey": "JRJEDMHU"
     }
   }
 }

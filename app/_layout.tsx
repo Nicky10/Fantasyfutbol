@@ -1,56 +1,84 @@
+import { BebasNeue_400Regular } from '@expo-google-fonts/bebas-neue';
+import { DMSans_400Regular, DMSans_700Bold } from '@expo-google-fonts/dm-sans';
 import { useFonts } from 'expo-font';
-import { DarkTheme, DefaultTheme, Stack, ThemeProvider } from 'expo-router';
+import { Stack } from 'expo-router';
 import * as SplashScreen from 'expo-splash-screen';
-import { useEffect } from 'react';
-import 'react-native-reanimated';
+import { StatusBar } from 'expo-status-bar';
+import { useEffect, useState } from 'react';
+import { View } from 'react-native';
 
-import { useColorScheme } from '@/components/useColorScheme';
+import { IntroOverlay } from '@/src/components/IntroOverlay';
+import { LeagueProvider } from '@/src/context/LeagueContext';
+import { colors } from '@/src/theme';
 
-export {
-  // Catch any errors thrown by the Layout component.
-  ErrorBoundary,
-} from 'expo-router';
+export { ErrorBoundary } from 'expo-router';
 
-export const unstable_settings = {
-  // Ensure that reloading on `/modal` keeps a back button present.
-  initialRouteName: '(tabs)',
-};
-
-// Prevent the splash screen from auto-hiding before asset loading is complete.
 SplashScreen.preventAutoHideAsync();
 
 export default function RootLayout() {
   const [loaded, error] = useFonts({
-    SpaceMono: require('../assets/fonts/SpaceMono-Regular.ttf'),
+    BebasNeue_400Regular,
+    DMSans_400Regular,
+    DMSans_700Bold,
   });
 
-  // Expo Router uses Error Boundaries to catch errors in the navigation tree.
   useEffect(() => {
     if (error) throw error;
   }, [error]);
 
   useEffect(() => {
-    if (loaded) {
-      SplashScreen.hideAsync();
-    }
+    if (loaded) SplashScreen.hideAsync();
   }, [loaded]);
 
-  if (!loaded) {
-    return null;
-  }
+  const [introDone, setIntroDone] = useState(false);
 
-  return <RootLayoutNav />;
-}
-
-function RootLayoutNav() {
-  const colorScheme = useColorScheme();
+  if (!loaded) return null;
 
   return (
-    <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
-      <Stack>
-        <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-        <Stack.Screen name="modal" options={{ presentation: 'modal' }} />
-      </Stack>
-    </ThemeProvider>
+    <LeagueProvider>
+      <View style={{ flex: 1, backgroundColor: colors.bg }}>
+        <StatusBar style="light" />
+        {!introDone ? <IntroOverlay onDone={() => setIntroDone(true)} /> : null}
+        <Stack
+          screenOptions={{
+            headerShown: false,
+            contentStyle: { backgroundColor: colors.bg },
+            animation: 'fade',
+          }}>
+          <Stack.Screen name="index" />
+          <Stack.Screen name="(tabs)" />
+          <Stack.Screen
+            name="player/[id]"
+            options={{
+              headerShown: true,
+              headerTitle: 'Player',
+              headerBackTitle: 'Back',
+              headerTintColor: colors.text,
+              headerStyle: { backgroundColor: colors.bg },
+            }}
+          />
+          <Stack.Screen
+            name="gameweek/[id]"
+            options={{
+              headerShown: true,
+              headerTitle: 'Gameweek',
+              headerBackTitle: 'Back',
+              headerTintColor: colors.text,
+              headerStyle: { backgroundColor: colors.bg },
+            }}
+          />
+          <Stack.Screen
+            name="rules"
+            options={{
+              headerShown: true,
+              headerTitle: 'Rules',
+              headerBackTitle: 'Back',
+              headerTintColor: colors.text,
+              headerStyle: { backgroundColor: colors.bg },
+            }}
+          />
+        </Stack>
+      </View>
+    </LeagueProvider>
   );
 }
